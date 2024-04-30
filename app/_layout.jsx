@@ -1,8 +1,10 @@
 import { Text, View } from 'react-native'
-import {Stack } from 'expo-router'
+import {Stack, SplashScreen } from 'expo-router'
 import { useFonts} from 'expo-font'
-import React from 'react'
+import React, { useEffect } from 'react'
 
+// Prevents autohiding before the assets are loadin
+SplashScreen.preventAutoHideAsync();
 const RootLayout = () => {
     const [fontsLoaded, error] = useFonts({
         "Poppins-Black": require("../assets/fonts/Poppins-Black.ttf"),
@@ -15,12 +17,21 @@ const RootLayout = () => {
         "Poppins-SemiBold": require("../assets/fonts/Poppins-SemiBold.ttf"),
         "Poppins-Thin": require("../assets/fonts/Poppins-Thin.ttf"),
       });
+
+    useEffect(() => {
+        if (error) throw error;
+        // Make sure you have a splashscreen to show otherwise it'll just be a white screen
+        // This is used to hide the native splash screen
+        if (fontsLoaded) SplashScreen.hideAsync();
+    }, [fontsLoaded, error])
+
+    if (!fontsLoaded && !error) return null;
+        
   return (
     <Stack>
         <Stack.Screen name="index" options={{
             headerShown: false
         }}/>
-
     </Stack>
   )
 }
