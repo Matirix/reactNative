@@ -1,10 +1,11 @@
-import { View, Text, ScrollView, Image } from 'react-native'
+import { View, Text, ScrollView, Image, Alert } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { images } from '../../constants';
 import FormField from '../../components/FormField';
 import CustomButton from '../../components/customButton';
 import {Link } from 'expo-router'
+import { signIn } from '../../lib/appwrite';
 const SignIn = () => {
     const [form, setForm] = useState({
         email: '',
@@ -12,8 +13,20 @@ const SignIn = () => {
     })
     const [isSubmitting, setisSubmitting] = useState(false)
 
-    const submit = () => {
-        return;
+    const submit = async () => {
+        if (!form.email || !form.password) {
+            Alert.alert('Error', 'Please fill in all the fields')
+        }
+        setisSubmitting(true)
+        
+        try{
+            await signIn(form.email, form.password)
+            router.replace('/home')
+        } catch (error) {
+            Alert.alert('Error', error.message)
+        } finally {
+            setisSubmitting(false)
+        }
     }
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -26,13 +39,13 @@ const SignIn = () => {
             <FormField 
                 title="Email"
                 value={form.email}
-                handleChange={(value)=>setForm({...form, email: value})}  
+                handleChangeText={(e) => setForm({ ...form, email: e })}
                 otherStyles="mt-7"
                 keyboardType="email-address"/>  
             <FormField 
                 title="Password"
                 value={form.password}
-                handleChange={(value)=>setForm({...form, password: value})}  
+                handleChangeText={(e)=>setForm({...form, password: e})}  
                 otherStyles="mt-7"
            />  
            {/* Submit Button */}
@@ -44,7 +57,6 @@ const SignIn = () => {
            <View className="justify-center pt-5 flex-row gap-2">
                 <Text className="text-lg text-gray-100 font-pregular">Don't have an account?</Text>
                 <Link className='text-secondary text-lg font-psemibold' href={'/sign-up'}>Sign up</Link>
-
            </View>
 
         </View>
