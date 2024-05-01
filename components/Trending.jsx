@@ -46,7 +46,6 @@ const TrendingItem = ({activeItem, item}) => {
 
 const Trending = ({posts}) => {
     const [activeItem, setActiveItem] = useState(posts[0])
-    console.log(posts)
 
     const viewableItemsChanged = ({viewableItems}) => {
         if (viewableItems.length > 0) {
