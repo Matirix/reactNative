@@ -9,9 +9,11 @@ import EmptyState from '../../components/EmptyState'
 import { getAllPosts, getLatestPosts } from '../../lib/appwrite'
 import useAppWrite from '../../lib/useAppWrite'
 import VideoCard from '../../components/videoCard'
+import { useGlobalContext } from '../../context/globalProvider'
 
 
 const Home = () => {
+    const {user, setUser, setIsLoggedIn} = useGlobalContext()
     const {data : posts, refetch} = useAppWrite(getAllPosts);
     const {data : latestPosts} = useAppWrite(getLatestPosts);
 
@@ -44,7 +46,7 @@ const Home = () => {
                     {/* Text */}
                     <View>
                         <Text className="font-pmedium text-sm text-gray-100">Welcome back</Text>
-                        <Text className="text-2xl font-psemibold text-white">Matthew</Text>
+                        <Text className="text-2xl font-psemibold text-white">{user?.username}</Text>
                     </View>
                     {/* Image */}
                     <View className="mt-1.5">
