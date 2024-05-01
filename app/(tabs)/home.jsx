@@ -6,13 +6,16 @@ import {images} from '../../constants'
 import SearchInput from '../../components/SearchInput'
 import Trending from '../../components/Trending'
 import EmptyState from '../../components/EmptyState'
-import { getAllPosts } from '../../lib/appwrite'
+import { getAllPosts, getLatestPosts } from '../../lib/appwrite'
 import useAppWrite from '../../lib/useAppWrite'
 import VideoCard from '../../components/videoCard'
 
 
 const Home = () => {
     const {data : posts, refetch} = useAppWrite(getAllPosts);
+    const {data : latestPosts} = useAppWrite(getLatestPosts);
+
+
     const [refreshing, setRefreshing] = useState(false)
 
     const onRefresh = async () => {
@@ -30,7 +33,6 @@ const Home = () => {
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}
         ListEmptyComponent={() => (
             <EmptyState title="No videos found" subtitle="Check back later for more videos"/>
-
         )}
         renderItem={({item}) =>(
             <VideoCard video={item}/>
@@ -62,7 +64,7 @@ const Home = () => {
                         Latest Videos
                     </Text>
                 </View>
-                <Trending posts={[{id:1}] ?? []} />
+                <Trending posts={latestPosts ?? []} />
 
 
 
